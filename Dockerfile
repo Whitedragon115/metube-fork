@@ -16,8 +16,11 @@ COPY Pipfile* docker-entrypoint.sh ./
 # Install dependencies
 RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
     chmod +x docker-entrypoint.sh && \
-    apk add --update ffmpeg aria2 coreutils shadow su-exec curl tini && \
-    apk add --update --virtual .build-deps gcc g++ musl-dev && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/main" > /etc/apk/repositories && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories && \
+    apk update --no-cache && \
+    apk add --no-cache ffmpeg aria2 coreutils shadow su-exec curl tini && \
+    apk add --no-cache --virtual .build-deps gcc g++ musl-dev && \
     pip install --no-cache-dir pipenv && \
     pipenv install --system --deploy --clear && \
     pip uninstall pipenv -y && \
